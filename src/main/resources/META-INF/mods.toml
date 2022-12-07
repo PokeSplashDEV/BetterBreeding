@@ -34,7 +34,7 @@ displayName="BetterBreeding" #mandatory
 authors="bencrow11" #optional
 # The description text for the mod (multi line!) (#mandatory)
 description='''
-A plugin that makes all pokemon that come from eggs unbreedable
+A plugin that makes all pokemon that come from eggs unbreedable and eggs untradable.
 '''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.BetterBreeding]] #optional
