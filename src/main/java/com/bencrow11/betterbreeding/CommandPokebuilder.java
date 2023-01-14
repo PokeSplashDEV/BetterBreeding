@@ -57,6 +57,7 @@ public class CommandPokebuilder extends PixelCommand {
 					// adds the tag pokebuilder tag to the pokemon in the specified slot
 					Objects.requireNonNull(storage.get(slot - 1)).addFlag("Pokebuilder");
 					Objects.requireNonNull(storage.get(slot - 1)).addFlag("unbreedable");
+					Objects.requireNonNull(storage.get(slot - 1)).getPersistentData().remove("currentOwner");
 				} catch (Exception error) {
 					CommandChatHandler.sendChat(sender, TextFormatting.RED + "Usage: /pokebuilder <player> <slot>");
 				}
