@@ -33,6 +33,7 @@ public class BetterBreeding {
 	@SubscribeEvent
 	public void registerCommand(RegisterCommandsEvent event) {
 		new CommandPokebuilder(event.getDispatcher());
+		new CommandDebug(event.getDispatcher());
 	}
 
 
@@ -64,34 +65,6 @@ public class BetterBreeding {
 		}
 
 		pokemon.addFlag("unbreedable");
-
-		// If the pokemon isn't given with /pokegive
-//		if (pokemon.getOriginalTrainerUUID() != null) {
-//			// if the player UUID is the same as the pokemon OT UUID and the pokemon hasn't been pokebuilt
-//
-//			// If OT and UUID match, and no pb flag, its breedable
-//			if (targetPlayerUUID.equals(pokemon.getOriginalTrainerUUID()) && !pokemon.hasFlag("Pokebuilder")) {
-//				pokemon.removeFlag("unbreedable");
-//			// If the pokemon has been sold on gts as breedable
-//			} else if (targetPlayerUUID.toString().equals(pokemon.getPersistentData().getString("currentOwner"))) {
-//				pokemon.removeFlag("unbreedable");
-//			} else  {
-//				pokemon.addFlag("unbreedable");
-//			}
-//
-//
-//
-//
-//			if (pokemon.getOriginalTrainerUUID().equals(event.getPlayer().getUniqueID()) && !pokemon.hasFlag("Pokebuilder")) {
-//				// Set the pokemon to breedable
-//				pokemon.removeFlag("unbreedable");
-//			// If the pokemon isn't already set as unbreedable
-//			} else if (!pokemon.isUnbreedable()) {
-//				// Set the pokemon to unbreedable
-//				pokemon.addFlag("unbreedable");
-////			}
-//		}
-
 	}
 
 }

@@ -3,6 +3,7 @@ package com.bencrow11.betterbreeding;
 import com.google.common.collect.Lists;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
 import com.pixelmonmod.pixelmon.api.storage.PartyStorage;
 import com.pixelmonmod.pixelmon.api.storage.StorageProxy;
 import com.pixelmonmod.pixelmon.comm.CommandChatHandler;
@@ -13,24 +14,25 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import net.minecraftforge.server.permission.PermissionAPI;
+import org.w3c.dom.Text;
 
 import java.util.List;
 import java.util.Objects;
 
-public class CommandPokebuilder extends PixelCommand {
+public class CommandDebug extends PixelCommand {
 
 
-	public CommandPokebuilder(CommandDispatcher<CommandSource> dispatcher) {
+	public CommandDebug(CommandDispatcher<CommandSource> dispatcher) {
 		super(dispatcher);
 	}
 
 	public String getName() {
-		return "pbtag";
+		return "pbdebug";
 	}
 
 	@Override
 	public List<String> getAliases() {
-		return Lists.newArrayList("pbtag");
+		return Lists.newArrayList("pbdebug");
 	}
 
 	@Override
@@ -40,26 +42,30 @@ public class CommandPokebuilder extends PixelCommand {
 			CommandChatHandler.sendChat(sender, TextFormatting.RED + "You do not have permission for this command!");
 		} else {
 			// checks arg amount is correct
-			if (args.length != 2) {
-				CommandChatHandler.sendChat(sender, TextFormatting.RED + "Usage: /pbtag <player> <slot>");
+			if (args.length != 1) {
+				CommandChatHandler.sendChat(sender, TextFormatting.RED + "Usage: /pbdebug <slot>");
 			} else {
 				try {
-					// gets the player given
-					ServerPlayerEntity player =
-							ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayerByUsername(args[0]);
+					int slot = Integer.parseInt(args[0]);
+					PartyStorage storage = StorageProxy.getParty(sender.asPlayer().getUniqueID());
+					Pokemon pokemon = storage.get(slot - 1);
 
-					// gets the slot from the args
-					int slot = Integer.parseInt(args[1]);
+					if (pokemon == null) {
+						CommandChatHandler.sendChat(sender, TextFormatting.RED + "No Pokemon in slot " + slot);
+						return;
+					}
 
-					assert player != null;
-					PartyStorage storage = StorageProxy.getParty(player.getUniqueID());
+					// Prints pokemon information to chat
+					CommandChatHandler.sendChat(sender, TextFormatting.AQUA + "Pokebuilt: " + pokemon.hasFlag(
+							"Pokebuilder"));
+					CommandChatHandler.sendChat(sender, TextFormatting.AQUA + "Can breed: " + !pokemon.hasFlag(
+							"unbreedable"));
+					CommandChatHandler.sendChat(sender,
+							TextFormatting.AQUA + "Current Owner: " + pokemon.getPersistentData().getString(
+									"currentOwner"));
 
-					// adds the tag pokebuilder tag to the pokemon in the specified slot
-					Objects.requireNonNull(storage.get(slot - 1)).addFlag("Pokebuilder");
-					Objects.requireNonNull(storage.get(slot - 1)).addFlag("unbreedable");
-					Objects.requireNonNull(storage.get(slot - 1)).getPersistentData().remove("currentOwner");
 				} catch (Exception error) {
-					CommandChatHandler.sendChat(sender, TextFormatting.RED + "Usage: /pbtag <player> <slot>");
+					CommandChatHandler.sendChat(sender, TextFormatting.RED + "Usage: /pbdebug <slot>");
 				}
 			}
 		}
