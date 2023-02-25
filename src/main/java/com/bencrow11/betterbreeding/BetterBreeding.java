@@ -1,6 +1,7 @@
 package com.bencrow11.betterbreeding;
 
 import com.pixelmonmod.pixelmon.Pixelmon;
+import com.pixelmonmod.pixelmon.api.events.PokedexEvent;
 import com.pixelmonmod.pixelmon.api.events.PokemonReceivedEvent;
 import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
 import com.pixelmonmod.pixelmon.comm.CommandChatHandler;
@@ -65,6 +66,17 @@ public class BetterBreeding {
 		}
 
 		pokemon.addFlag("unbreedable");
+	}
+
+	// Prevents non OT pokemon being registered in the PokeDex
+	@SubscribeEvent
+	public void onDexFill(PokedexEvent.Pre event) {
+			UUID player = event.getPlayer().getUniqueID();
+			UUID pokemon = event.getPokemon().getOriginalTrainerUUID();
+
+			if (!player.equals(pokemon)) {
+				event.setCanceled(true);
+			}
 	}
 
 }
